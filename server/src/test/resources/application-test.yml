@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:study_planner_test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+app:
+  security:
+    jwt-secret: test-secret-value-with-more-than-32-characters
+    jwt-ttl-minutes: 60

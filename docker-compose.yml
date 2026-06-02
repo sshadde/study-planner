@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: study-planner-postgres
+    environment:
+      POSTGRES_DB: study_planner
+      POSTGRES_USER: study_planner
+      POSTGRES_PASSWORD: study_planner
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U study_planner -d study_planner"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+    container_name: study-planner-server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/study_planner
+      DB_USERNAME: study_planner
+      DB_PASSWORD: study_planner
+      JWT_SECRET: change-this-secret-to-at-least-32-characters
+      JWT_TTL_MINUTES: 120
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin-password
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:
